@@ -15,14 +15,68 @@ async function main() {
   }
 
   // Wrangle data
-  // Clip top 10 rows for debug purpose
-  const wrangledData = content.slice(0, 10)
+  let counter = 0
+  let wrangledData = content.map((row: Track): Track | null => {
+    console.log(`Wrangling ${counter++}/${content.length}`)
 
+    // cut date to year
+    row['Album Release Date'] = row['Album Release Date'].slice(0, 4)
+    
+    // If "Track Name" is empty, skip this row
+    if (row['Track Name'] === '') {
+      return null
+    }
+
+    return row
+  })
+
+  // Remove null
+  wrangledData = wrangledData.filter((row: Track | null) => row !== null)
+  
   //output csv to ./data/wrangleed.csv
   const csvWriter = csvwriter.createObjectCsvWriter({
     path: "./data/wrangleed.csv",
     header,
-  }).writeRecords(wrangledData)
+  }).writeRecords(wrangledData as Track[])
 }
 
 main()
+
+// Types declare
+interface Track {
+  "Track URI": string
+  "Track Name": string
+  "Artist URI(s)": string
+  "Artist Name(s)": string
+  "Album URI": string
+  "Album Name": string
+  "Album Artist URI(s)": string
+  "Album Artist Name(s)": string
+  "Album Release Date": string
+  "Album Image URL": string
+  "Disc Number": number
+  "Track Number": number
+  "Track Duration (ms)": number
+  "Track Preview URL": string
+  "Explicit": boolean
+  "Popularity": number
+  "ISRC": string
+  "Added By": string
+  "Added At": string
+  "Artist Genres": string
+  "Danceability": number
+  "Energy": number
+  "Key": number
+  "Loudness": number
+  "Mode": number
+  "Speechiness": number
+  "Acousticness": number
+  "Instrumentalness": number
+  "Liveness": number
+  "Valence": number
+  "Tempo": number
+  "Time Signature": number
+  "Album Genres": string
+  "Label": string
+  "Copyrights": string
+}
