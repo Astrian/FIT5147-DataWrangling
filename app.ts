@@ -27,6 +27,11 @@ async function main() {
       return null
     }
 
+    // If "Album URI" is empty, skip this row
+    if (row['Album URI'] === '') {
+      return null
+    }
+
     return row
   })
 
